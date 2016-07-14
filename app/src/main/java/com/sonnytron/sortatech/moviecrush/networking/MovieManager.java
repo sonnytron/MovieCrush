@@ -36,7 +36,11 @@ public class MovieManager {
 
     private ArrayList<Movie> mMovies;
 
-    /* TODO: Add networking manager and import here to retrieve movies from TMDB */
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        void onMoviesRetrieved(List<Movie> movies);
+    }
 
     public static MovieManager get(Context context) {
         if (sMovieManager == null) {
@@ -45,15 +49,19 @@ public class MovieManager {
         return sMovieManager;
     }
 
+    public void removeCallbacks() {
+        mCallbacks = null;
+    }
+
     private MovieManager(Context context) {
         mContext = context.getApplicationContext();
         mClient = new AsyncHttpClient();
         mParams = new RequestParams();
+        mCallbacks = (Callbacks) context;
     }
 
 
-
-    public List<Movie> getNowPlaying(Integer page) {
+    public void getNowPlaying(Integer page) {
         mParams.put(page.toString(), "page");
         mParams.put(mApiKey, "api_key");
         mClient.get(baseUrl + nowPlaying, mParams, new JsonHttpResponseHandler() {
@@ -62,6 +70,7 @@ public class MovieManager {
                try {
                    JSONArray moviesJson = response.getJSONArray("results");
                    mMovies = Movie.fromJson(moviesJson);
+                   mCallbacks.onMoviesRetrieved(mMovies);
                } catch (JSONException e) {
                    e.printStackTrace();
                }
@@ -72,7 +81,6 @@ public class MovieManager {
                Toast.makeText(sMovieManager.mContext, "Failed Network", Toast.LENGTH_SHORT).show();
            }
         });
-        return mMovies;
     }
 
     public List<Movie> getMovies() {
