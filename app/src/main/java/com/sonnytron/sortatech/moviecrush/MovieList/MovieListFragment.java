@@ -1,5 +1,7 @@
 package com.sonnytron.sortatech.moviecrush.MovieList;
 
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -109,6 +111,7 @@ public class MovieListFragment extends Fragment {
         private TextView mTitleTextView;
         private ImageView mImageView;
 
+
         public void bindMovie(Movie movie) {
             mMovie = movie;
             mTitleTextView.setText(mMovie.getTitle());
@@ -119,14 +122,27 @@ public class MovieListFragment extends Fragment {
             super(itemView);
             itemView.setOnClickListener(this);
             mTitleTextView = (TextView) itemView.findViewById(R.id.list_movie_title);
-            mImageView = (ImageView) itemView.findViewById(R.id.list_movie_image_view);
+            int orientation = getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                mImageView = (ImageView) itemView.findViewById(R.id.list_movie_poster);
+            } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                mImageView = (ImageView) itemView.findViewById(R.id.list_movie_backdrop_view);
+            }
+
         }
 
         private void updateImageView() {
             if (mImageBaseUrl.length() > 0) {
                 if (mMovie.getBackdrop().length() > 0 && mImageBaseUrl != null) {
-                    String imageUrl = mImageBaseUrl + mMovie.getBackdrop();
-                    Picasso.with(getContext()).load(imageUrl).into(mImageView);
+                    int orientation = getResources().getConfiguration().orientation;
+                    if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                        String imageUrl = mImageBaseUrl + mMovie.getPoster();
+                        Picasso.with(getContext()).load(imageUrl).into(mImageView);
+                    } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        String imageUrl = mImageBaseUrl + mMovie.getBackdrop();
+                        Picasso.with(getContext()).load(imageUrl).into(mImageView);
+                    }
+
                 }
             }
         }
