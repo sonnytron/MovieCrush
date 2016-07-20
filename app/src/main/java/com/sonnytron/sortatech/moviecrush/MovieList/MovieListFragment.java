@@ -1,33 +1,43 @@
 package com.sonnytron.sortatech.moviecrush.MovieList;
 
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.sonnytron.sortatech.moviecrush.Movie;
 import com.sonnytron.sortatech.moviecrush.R;
 import com.sonnytron.sortatech.moviecrush.networking.MovieManager;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by sonnyrodriguez on 7/14/16.
  */
-public class MovieListFragment extends Fragment implements MovieManager.Callbacks {
+public class MovieListFragment extends Fragment {
 
     private RecyclerView mMovieRecyclerView;
     private Callbacks mCallbacks;
     private MovieAdapter mAdapter;
-    private Integer mPageCount = 1;
+    private String mImageBaseUrl;
 
     public interface Callbacks {
         void onMovieSelected(Movie movie);
@@ -38,9 +48,7 @@ public class MovieListFragment extends Fragment implements MovieManager.Callback
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
         mMovieRecyclerView = (RecyclerView) view.findViewById(R.id.movie_recycler_view);
         mMovieRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         updateFragment();
-
         return view;
     }
 
@@ -54,24 +62,44 @@ public class MovieListFragment extends Fragment implements MovieManager.Callback
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
-        MovieManager manager = MovieManager.get(getActivity());
-        manager.removeCallbacks();
+
     }
 
     public void updateFragment() {
         MovieManager movieManager = MovieManager.get(getActivity());
-        movieManager.getNowPlaying(mPageCount);
-    }
-
-    @Override
-    public void onMoviesRetrieved(List<Movie> movies) {
-        if (mAdapter == null) {
-            mAdapter = new MovieAdapter(movies);
-            mMovieRecyclerView.setAdapter(mAdapter);
+        movieManager.setApiKey("73f9c1015526958e0eaad7045ac2269f");
+        if (movieManager.getImageBaseUrl().length() > 0) {
+            movieManager.getNowPlaying(new MovieManager.ManagerHandler() {
+                @Override
+                public void moviesReturned(List<Movie> movies) {
+                    MovieManager movieManager = MovieManager.get(getActivity());
+                    setImageBaseUrl(movieManager.getImageBaseUrl());
+                    if (mAdapter == null) {
+                        mAdapter = new MovieAdapter(movies);
+                        mMovieRecyclerView.setAdapter(mAdapter);
+                    } else {
+                        mAdapter.setMovies(movies);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+            });
         } else {
-            mAdapter.setMovies(movies);
-            mAdapter.notifyDataSetChanged();
+            movieManager.getImageBaseUrl(new MovieManager.ManagerHandler() {
+                @Override
+                public void moviesReturned(List<Movie> movies) {
+                    MovieManager movieManager = MovieManager.get(getActivity());
+                    setImageBaseUrl(movieManager.getImageBaseUrl());
+                    if (mAdapter == null) {
+                        mAdapter = new MovieAdapter(movies);
+                        mMovieRecyclerView.setAdapter(mAdapter);
+                    } else {
+                        mAdapter.setMovies(movies);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+            });
         }
+
     }
 
     private class MovieHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -95,8 +123,11 @@ public class MovieListFragment extends Fragment implements MovieManager.Callback
         }
 
         private void updateImageView() {
-            if (mMovie.getBackdrop().length() > 0) {
-                Picasso.with(getContext()).load(mMovie.getBackdrop()).into(mImageView);
+            if (mImageBaseUrl.length() > 0) {
+                if (mMovie.getBackdrop().length() > 0 && mImageBaseUrl != null) {
+                    String imageUrl = mImageBaseUrl + mMovie.getBackdrop();
+                    Picasso.with(getContext()).load(imageUrl).into(mImageView);
+                }
             }
         }
 
@@ -129,11 +160,22 @@ public class MovieListFragment extends Fragment implements MovieManager.Callback
 
         @Override
         public int getItemCount() {
-            return mMovies.size();
+            if (mMovies != null) {
+                return mMovies.size();
+            } else {
+                return 0;
+            }
         }
 
         public void setMovies(List<Movie> movies) {
             mMovies = movies;
         }
     }
+
+    public void setImageBaseUrl(String imageBaseUrl) {
+        mImageBaseUrl = imageBaseUrl;
+    }
+
+    // TODO: Remove this function and push it to MovieManager.java when you learn Observables
+
 }

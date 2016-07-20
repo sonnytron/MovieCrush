@@ -38,7 +38,6 @@ public class MoviePagerActivity extends AppCompatActivity {
         String movieId = (String) getIntent().getSerializableExtra(EXTRA_MOVIE_ID);
 
         mViewPager = (ViewPager) findViewById(R.id.activity_movie_view_pager);
-        mMovies = MovieManager.get(this).getMovies();
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
