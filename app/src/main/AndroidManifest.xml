@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".MoviePagerActivity"
+        <activity android:name=".moviepager.MoviePagerActivity"
             android:label="@string/app_name"
             android:parentActivityName=".MovieCrushListActivity">
         </activity>

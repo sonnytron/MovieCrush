@@ -123,6 +123,17 @@ public class MovieManager {
         });
     }
 
+    public Movie getMovie(Integer movieId) {
+        Movie movie = new Movie();
+        for (int i = 0; i < mMovies.size(); i++) {
+            movie = mMovies.get(i);
+            if (movie.getId() == movieId) {
+                break;
+            }
+        }
+        return movie;
+    }
+
     public String getApiKey() {
         return mApiKey;
     }

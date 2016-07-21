@@ -96,5 +96,7 @@ public class Movie {
         mId = id;
     }
 
-
+    public Integer getId() {
+        return mId;
+    }
 }

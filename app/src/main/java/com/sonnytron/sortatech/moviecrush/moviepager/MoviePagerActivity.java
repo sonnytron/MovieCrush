@@ -1,4 +1,4 @@
-package com.sonnytron.sortatech.moviecrush;
+package com.sonnytron.sortatech.moviecrush.moviepager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.sonnytron.sortatech.moviecrush.networking.MovieManager;
+import com.sonnytron.sortatech.moviecrush.Movie;
+import com.sonnytron.sortatech.moviecrush.R;
 
 import java.util.List;
 
