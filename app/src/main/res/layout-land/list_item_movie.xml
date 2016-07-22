@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:background="@color/backgroundDark"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
@@ -30,5 +31,23 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/list_movie_backdrop_view"
         android:text="@string/movie_hint"/>
+    <TextView
+        android:id="@+id/list_movie_overview"
+        android:textColor="@color/textColor"
+        android:textSize="16dp"
+        android:shadowColor="@color/shadowColor"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="25"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="12dp"
+        android:layout_toRightOf="@+id/list_movie_backdrop_view"
+        android:maxLength="120"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_below="@+id/list_movie_title"
+        android:text="@string/movie_overview_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

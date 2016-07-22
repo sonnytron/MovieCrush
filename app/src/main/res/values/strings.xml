@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MovieCrush</string>
     <string name="movie_hint">Title</string>
+    <string name="movie_overview_hint">Overview sample text</string>
 </resources>

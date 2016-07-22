@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sonnytron.sortatech.moviecrush.Movie;
 import com.sonnytron.sortatech.moviecrush.R;
@@ -89,22 +90,21 @@ public class MovieFragment extends Fragment {
     }
 
     public void updateVoteButtons() {
+        Toast.makeText(getContext(), mMovie.getAverage().toString(), Toast.LENGTH_SHORT).show();
         double voteFive = mMovie.getAverage() / 2;
         int voteCount = (int) Math.round(voteFive);
-        if (voteCount > 5) {
-            mStarFive.setVisibility(View.VISIBLE);
-        }
-        if (voteCount > 4) {
-            mStarFour.setVisibility(View.VISIBLE);
-        }
-        if (voteCount > 3) {
-            mStarThree.setVisibility(View.VISIBLE);
-        }
-        if (voteCount > 2) {
-            mStarTwo.setVisibility(View.VISIBLE);
-        }
-        if (voteCount > 1) {
-            mStarOne.setVisibility(View.VISIBLE);
+
+        switch (voteCount) {
+            case 5:
+                mStarFive.setVisibility(View.VISIBLE);
+            case 4:
+                mStarFour.setVisibility(View.VISIBLE);
+            case 3:
+                mStarThree.setVisibility(View.VISIBLE);
+            case 2:
+                mStarTwo.setVisibility(View.VISIBLE);
+            case 1:
+                mStarOne.setVisibility(View.VISIBLE);
         }
     }
 }

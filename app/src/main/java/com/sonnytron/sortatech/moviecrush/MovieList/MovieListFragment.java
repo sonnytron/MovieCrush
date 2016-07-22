@@ -116,11 +116,12 @@ public class MovieListFragment extends Fragment {
 
         private TextView mTitleTextView;
         private ImageView mImageView;
-
+        private TextView mOverviewTextView;
 
         public void bindMovie(Movie movie) {
             mMovie = movie;
             mTitleTextView.setText(mMovie.getTitle());
+            mOverviewTextView.setText(mMovie.getOverview());
             updateImageView();
         }
 
@@ -134,7 +135,7 @@ public class MovieListFragment extends Fragment {
             } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 mImageView = (ImageView) itemView.findViewById(R.id.list_movie_backdrop_view);
             }
-
+            mOverviewTextView = (TextView) itemView.findViewById(R.id.list_movie_overview);
         }
 
         private void updateImageView() {
