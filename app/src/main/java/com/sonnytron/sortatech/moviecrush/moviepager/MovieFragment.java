@@ -35,8 +35,6 @@ public class MovieFragment extends Fragment {
     private ImageView mStarFour;
     private ImageView mStarFive;
 
-    private List<ImageView> mStarButtons;
-
     public static MovieFragment newInstance(Integer movieId) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_MOVIE_ID, movieId);
@@ -68,7 +66,7 @@ public class MovieFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_movie, container, false);
         mTitleTextView = (TextView) v.findViewById(R.id.movie_fragment_title);
         mTitleTextView.setText(mMovie.getTitle());
-        mOverviewTextView = (TextView) v.findViewById(R.id.movie_fragment_description_long);
+        mOverviewTextView = (TextView) v.findViewById(R.id.fragment_movie_description);
         mOverviewTextView.setText(mMovie.getOverview());
         mBackdropButton = (ImageButton) v.findViewById(R.id.fragment_video_button);
         mBackdropButton.setOnClickListener(new View.OnClickListener() {
@@ -82,11 +80,6 @@ public class MovieFragment extends Fragment {
         mStarThree = (ImageView) v.findViewById(R.id.movie_fragment_star3);
         mStarFour = (ImageView) v.findViewById(R.id.movie_fragment_star4);
         mStarFive = (ImageView) v.findViewById(R.id.movie_fragment_star5);
-        mStarButtons.add(mStarOne);
-        mStarButtons.add(mStarTwo);
-        mStarButtons.add(mStarThree);
-        mStarButtons.add(mStarFour);
-        mStarButtons.add(mStarFive);
         updateVoteButtons();
         return v;
     }

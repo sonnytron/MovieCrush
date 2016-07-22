@@ -1,5 +1,6 @@
 package com.sonnytron.sortatech.moviecrush.MovieList;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -55,6 +56,12 @@ public class MovieListFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         updateFragment();
@@ -64,7 +71,6 @@ public class MovieListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
-
     }
 
     public void updateFragment() {

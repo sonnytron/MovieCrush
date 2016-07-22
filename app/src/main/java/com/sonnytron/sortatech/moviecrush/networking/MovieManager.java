@@ -59,7 +59,7 @@ public class MovieManager {
 
     public void getNowPlaying(ManagerHandler handler) {
         final ManagerHandler managerHandler = handler;
-        if (mMovies.size() > 0) {
+        if (mMovies != null) {
             managerHandler.moviesReturned(mMovies);
         } else {
             mParams.put("page", mPage.toString());
