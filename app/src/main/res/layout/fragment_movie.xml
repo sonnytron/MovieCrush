@@ -31,12 +31,14 @@
         <ImageView
             android:id="@+id/movie_fragment_star1"
             android:layout_marginLeft="16dp"
+            android:visibility="invisible"
             android:src="@drawable/ic_vote_star"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <ImageView
             android:id="@+id/movie_fragment_star2"
             android:layout_width="wrap_content"
+            android:visibility="invisible"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_vote_star"
             android:layout_marginLeft="8dp"/>
@@ -45,17 +47,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_vote_star"
+            android:visibility="invisible"
             android:layout_marginLeft="8dp"/>
         <ImageView
             android:id="@+id/movie_fragment_star4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:src="@drawable/ic_vote_star"
             android:layout_marginLeft="8dp"/>
         <ImageView
             android:id="@+id/movie_fragment_star5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:src="@drawable/ic_vote_star"
             android:layout_marginLeft="8dp"/>
     </LinearLayout>

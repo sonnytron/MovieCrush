@@ -59,27 +59,32 @@ public class MovieManager {
 
     public void getNowPlaying(ManagerHandler handler) {
         final ManagerHandler managerHandler = handler;
-        mParams.put("page", mPage.toString());
-        mParams.put("api_key", getApiKey());
-        mClient.get(baseUrl + nowPlaying, mParams, new JsonHttpResponseHandler() {
+        if (mMovies.size() > 0) {
+            managerHandler.moviesReturned(mMovies);
+        } else {
+            mParams.put("page", mPage.toString());
+            mParams.put("api_key", getApiKey());
+            mClient.get(baseUrl + nowPlaying, mParams, new JsonHttpResponseHandler() {
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-               try {
-                   JSONArray moviesJson = response.getJSONArray("results");
-                   mMovies = Movie.fromJson(moviesJson);
-                   managerHandler.moviesReturned(mMovies);
-               } catch (JSONException e) {
-                   e.printStackTrace();
-               }
-           }
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        JSONArray moviesJson = response.getJSONArray("results");
+                        mMovies = Movie.fromJson(moviesJson);
+                        managerHandler.moviesReturned(mMovies);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-           @Override
-           public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject jsonObject) {
-               Log.d("Failed: ", ""+statusCode);
-               Log.d("Error : ", "" + throwable);
-           }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject jsonObject) {
+                    Log.d("Failed: ", ""+statusCode);
+                    Log.d("Error : ", "" + throwable);
+                }
+            });
+        }
+
     }
 
     public void getImageBaseUrl(ManagerHandler handler) {
@@ -144,5 +149,9 @@ public class MovieManager {
 
     public String getImageBaseUrl() {
         return mImageBaseUrl;
+    }
+
+    public ArrayList<Movie> getMovies() {
+        return mMovies;
     }
 }

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.sonnytron.sortatech.moviecrush.Movie;
 import com.sonnytron.sortatech.moviecrush.R;
+import com.sonnytron.sortatech.moviecrush.networking.MovieManager;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class MoviePagerActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private List<Movie> mMovies;
 
-    public static Intent newIntent(Context packageContext, String movieId) {
+    public static Intent newIntent(Context packageContext, Integer movieId) {
         Intent intent = new Intent(packageContext, MoviePagerActivity.class);
         intent.putExtra(EXTRA_MOVIE_ID, movieId);
         return intent;
@@ -35,22 +36,41 @@ public class MoviePagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_pager);
 
         // TODO: Add movieId to movie object and ensure MovieFragment is built with layout
+        Integer movieId = (Integer) getIntent().getSerializableExtra(EXTRA_MOVIE_ID);
 
-        String movieId = (String) getIntent().getSerializableExtra(EXTRA_MOVIE_ID);
+        MovieManager movieManager = MovieManager.get(getApplicationContext());
+        if (movieManager.getMovies().size() > 0) {
+            mMovies = movieManager.getMovies();
+            mViewPager = (ViewPager) findViewById(R.id.activity_movie_view_pager);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
+                @Override
+                public Fragment getItem(int position) {
+                    Movie movie = mMovies.get(position);
+                    return MovieFragment.newInstance(movie.getId());
+                }
 
-        mViewPager = (ViewPager) findViewById(R.id.activity_movie_view_pager);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-            @Override
-            public Fragment getItem(int position) {
-                Movie movie = mMovies.get(position);
-                return null;
+                @Override
+                public int getCount() {
+                    return mMovies.size();
+                }
+            });
+        }
+
+        for (int i = 0; i < mMovies.size(); i++) {
+            if (mMovies.get(i).getId().equals(movieId)) {
+                mViewPager.setCurrentItem(i);
+                break;
             }
+        }
 
+        movieManager.getImageBaseUrl(new MovieManager.ManagerHandler() {
             @Override
-            public int getCount() {
-                return mMovies.size();
+            public void moviesReturned(List<Movie> movies) {
+                mMovies = movies;
             }
         });
+
+
     }
 }
