@@ -1,8 +1,12 @@
 package com.sonnytron.sortatech.moviecrush.moviepager;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +18,8 @@ import android.widget.Toast;
 import com.sonnytron.sortatech.moviecrush.Movie;
 import com.sonnytron.sortatech.moviecrush.R;
 import com.sonnytron.sortatech.moviecrush.networking.MovieManager;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -35,6 +41,7 @@ public class MovieFragment extends Fragment {
     private ImageView mStarThree;
     private ImageView mStarFour;
     private ImageView mStarFive;
+    private String mImageUrl;
 
     public static MovieFragment newInstance(Integer movieId) {
         Bundle args = new Bundle();
@@ -82,6 +89,7 @@ public class MovieFragment extends Fragment {
         mStarFour = (ImageView) v.findViewById(R.id.movie_fragment_star4);
         mStarFive = (ImageView) v.findViewById(R.id.movie_fragment_star5);
         updateVoteButtons();
+        updateBackdrop();
         return v;
     }
 
@@ -89,11 +97,28 @@ public class MovieFragment extends Fragment {
 
     }
 
+    public void updateBackdrop() {
+        final MovieManager movieManager = MovieManager.get(getActivity());
+        if (movieManager.getImageBaseUrl().length() > 0) {
+            mImageUrl = movieManager.getImageBaseUrl();
+        } else {
+            movieManager.getImageBaseUrl(new MovieManager.ManagerHandler() {
+                @Override
+                public void moviesReturned(List<Movie> movies) {
+                    mImageUrl = movieManager.getImageBaseUrl();
+                }
+            });
+        }
+
+        if (mImageUrl.length() > 0) {
+            String imageUrl = mImageUrl + mMovie.getBackdrop();
+            Picasso.with(getContext()).load(imageUrl).into(mBackdropButton);
+        }
+    }
+
     public void updateVoteButtons() {
-        Toast.makeText(getContext(), mMovie.getAverage().toString(), Toast.LENGTH_SHORT).show();
         double voteFive = mMovie.getAverage() / 2;
         int voteCount = (int) Math.round(voteFive);
-
         switch (voteCount) {
             case 5:
                 mStarFive.setVisibility(View.VISIBLE);

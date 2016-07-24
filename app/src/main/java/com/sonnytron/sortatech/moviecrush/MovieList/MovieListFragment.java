@@ -107,7 +107,6 @@ public class MovieListFragment extends Fragment {
                 }
             });
         }
-
     }
 
     private class MovieHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
